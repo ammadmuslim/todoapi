@@ -15,7 +15,7 @@ export default class ToDoScreen extends Component{
     componentDidMount(){
         axios({
             method:'get',
-            url:'http://jsonplaceholder.typicode.com/todos'
+            url:'http://jsonplaceholder.typicode.com/todos/'
           })
             .then((res)=> {
                 // dataApi = this.state.items.concat(res.data)
@@ -28,7 +28,7 @@ export default class ToDoScreen extends Component{
             })
         // http://dummy.restapiexample.com/api/v1/employees, https://jsonplaceholder.typicode.com/users,https://reqres.in/api/users
     }
-
+	
     handleAdd (){
         // let item = this.state.items.concat(this.state.text);
         // this.setState({items: item});
@@ -44,12 +44,15 @@ export default class ToDoScreen extends Component{
 			// }
           // })
 	  if (this.state.text.length>0){
-		axios.post('http://jsonplaceholder.typicode.com/todos',{
-			title: this.state.text
+		axios.post('http://jsonplaceholder.typicode.com/todos/',{
+			userId: 1,
+			title: this.state.text,
+			completed: false
 		})
           .then((res)=> {
 			  let item = this.state.items.concat(res.data);
 			  this.setState({items: item})
+			  this.setState({text: ''});
 		   })
 		  .then(this.textInput.clear())
           .catch((err)=> alert(err))
@@ -66,15 +69,14 @@ export default class ToDoScreen extends Component{
 			this.setState({items: index});
 			alert('deleted')
 		})
-		.catch((err)=> alert(err))
     }
 
     render(){
         return(
             <View>
               <Header style={{height: 40, backgroundColor: '#6ef442'}}>
-                <Left><Title style={{fontWeight: 'bold', marginLeft: 5}}>TO DO APP</Title></Left>
-				<Body/>
+                <Left/>
+				<Body><Title style={{fontWeight: 'bold', marginLeft: 5}}>TO DO APP</Title></Body>
               </Header>
               <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'center'}}>                
                 <TextInput ref={input => { this.textInput = input }} style={{borderBottomWidth: 0.3, width: 280, height: 35, marginRight: 15}} onChangeText={(text)=>this.setState({text})}/>
@@ -87,8 +89,8 @@ export default class ToDoScreen extends Component{
                 <FlatList
 					inverted
                     data={this.state.items}
-                    style={{marginTop: 20, marginLeft: 10, marginRight: 10}}
-                    renderItem={({item, index})=><TouchableHighlight onLongPress={()=>this.handleDelete(item.id)}>
+                    style={{marginLeft: 10, marginRight: 10, marginTop: 5}}
+                    renderItem={({item, index})=><TouchableHighlight onLongPress={()=>this.handleDelete(index)}>
                     <Text style={{borderBottomWidth: 0.3, borderBottomColor: 'grey', marginBottom: 5}}>{item.title}</Text>
                     </TouchableHighlight>}
                     />
